@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {Alert} from "react-native";
+import {AuthContext, AuthProvider} from "./context/AuthContext";
+import messaging from '@react-native-firebase/messaging';
+import AppNav from "./AppNav";
 
+import {PermissionsAndroid} from 'react-native';
+import {useEffect} from "react";
+import {useFonts} from "expo-font";
+import {Mulish_400Regular, Mulish_500Medium, Mulish_800ExtraBold} from "@expo-google-fonts/mulish";
+import {DMSans_400Regular, DMSans_500Medium, DMSans_700Bold} from "@expo-google-fonts/dm-sans";
+import {Inter_400Regular, Inter_500Medium, Inter_700Bold} from "@expo-google-fonts/inter";
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    const [fontsLoaded, fontError] = useFonts({
+        Mulish_400Regular,
+        Mulish_500Medium,
+        Mulish_800ExtraBold,
+        DMSans_400Regular,
+        DMSans_500Medium,
+        DMSans_700Bold,
+        Inter_700Bold,
+        Inter_500Medium,
+        Inter_400Regular
+    });
+    if (!fontsLoaded && !fontError) {
+        return null;
+    }
+    return (
+        <AuthProvider>
+          <AppNav />
+        </AuthProvider>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
