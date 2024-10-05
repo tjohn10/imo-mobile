@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "905991878125",
+    "project_id": "imomobile-2500d",
+    "storage_bucket": "imomobile-2500d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905991878125:android:36bc936634573004fce3e4",
+        "android_client_info": {
+          "package_name": "com.nedstarcorp22.imomobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_Nu3CBYRcQX5-zWQ1BONNq8RfzUapPy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
