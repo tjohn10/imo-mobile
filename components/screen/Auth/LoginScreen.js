@@ -52,6 +52,7 @@ export default function LoginScreen({navigation}){
                                 style={styles.input}
                                 placeholder="email@gmail.com"
                                 value={email}
+                                textColor="#000"
                                 autoCapitalize="none"
                                 keyboardType="email-address"
                                 returnKeyType="next"
@@ -69,6 +70,7 @@ export default function LoginScreen({navigation}){
                             <TextInput
                                 style={styles.input}
                                 placeholder="Password"
+                                textColor="#000"
                                 secureTextEntry={!passwordVisible}
                                 value={password}
                                 keyboardType="default"
@@ -112,6 +114,7 @@ export default function LoginScreen({navigation}){
                                 loading ? <ActivityIndicator size="large" color="#09893E"/> : (
                                     <Button
                                         title="Login"
+                                        disabled={!checked}
                                         onPress={() => loginHandle(email, password)}
                                         buttonStyle={styles.button} />
                                 )
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     image: {
         marginLeft: 'auto',
         marginRight: 'auto',
-        marginTop: 120,
+        marginTop: 50,
     },
     title:{
         fontSize: 24,

@@ -74,7 +74,6 @@ export default function TransportEnumerationScreen({ navigation, route }) {
   const [plateNumberResponse, setPlateNumberResponse] = useState([]);
 
   const setDailyAmount = (value) => {
-    console.log(value, 'value')
     setDailyTicket(value.dailyAmount)
     setEnumFee(value.amount)
   }
@@ -159,7 +158,7 @@ export default function TransportEnumerationScreen({ navigation, route }) {
         s.plateNo = plateNumber;
         s.phone = taxpayerPhone;
         s.park = park;
-        s.union = tradeUnion;
+        s.union = '';
         s.vehicleCategory = vehicleCategory.productCode;
         s.dailyAmount = dailyTicket;
         s.enumFee = enumFee;
@@ -378,21 +377,21 @@ export default function TransportEnumerationScreen({ navigation, route }) {
               })}
             </Picker>
           </View>
-          <View style={{ marginTop: 5 }}>
-            <Text style={styles.label}>Trade Unions</Text>
-            <Picker
-                style={styles.dropdown}
-                selectedValue={tradeUnion}
-                onValueChange={(itemValue, itemIndex) => {
-                  setTradeUnion(itemValue)
-                }}
-            >
-              <Picker.Item label="Select Trade Union" value="" />
-              {unions.map((item, index) => {
-                return <Picker.Item key={index} label={item.unionName} value={item.unionCode} />;
-              })}
-            </Picker>
-          </View>
+          {/*<View style={{ marginTop: 5 }}>*/}
+          {/*  <Text style={styles.label}>Trade Unions</Text>*/}
+          {/*  <Picker*/}
+          {/*      style={styles.dropdown}*/}
+          {/*      selectedValue={tradeUnion}*/}
+          {/*      onValueChange={(itemValue, itemIndex) => {*/}
+          {/*        setTradeUnion(itemValue)*/}
+          {/*      }}*/}
+          {/*  >*/}
+          {/*    <Picker.Item label="Select Trade Union" value="" />*/}
+          {/*    {unions.map((item, index) => {*/}
+          {/*      return <Picker.Item key={index} label={item.unionName} value={item.unionCode} />;*/}
+          {/*    })}*/}
+          {/*  </Picker>*/}
+          {/*</View>*/}
 
           {errorText !== "" ? (
               <Text style={styles.errorTextStyle}>{errorText}</Text>
@@ -401,6 +400,7 @@ export default function TransportEnumerationScreen({ navigation, route }) {
             <Button
                 title="Save & Continue"
                 titleStyle={styles.btnText}
+                // onPress={() => navigation.navigate("Order2", {params: {plateNumber}})}
                 onPress={getPlateDetails}
                 buttonStyle={styles.nextBtnStyle}
             />

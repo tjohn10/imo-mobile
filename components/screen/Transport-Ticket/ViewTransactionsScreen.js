@@ -11,15 +11,12 @@ import {
     View, ScrollView
 } from "react-native";
 import {Card, TextInput} from "react-native-paper";
-import CardSlider from 'react-native-cards-slider';
 import {StatusBar} from "expo-status-bar";
 import {AuthStore} from "../../../store";
 import {MOBILE_API} from "../../../config";
 import Moment from "moment";
 import dayjs from "dayjs";
 import {AuthContext} from "../../../context/AuthContext";
-import Carousel from 'react-native-snap-carousel';
-import CardSilder from 'react-native-cards-slider';
 
 export default function ViewTransactionsScreen({navigation}) {
     const [payments, setPayments] = useState([])
@@ -109,16 +106,16 @@ export default function ViewTransactionsScreen({navigation}) {
             <StatusBar style="auto"/>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={styles.title}>Transactions</Text>
-                <TextInput
-                    dense
-                    mode="outlined"
-                    outlineStyle={{height: 40, borderRadius: 40}}
-                    style={styles.input}
-                    placeholder="Search"
-                    onChangeText={(text) => searchTransaction(text)}
-                    right={<TextInput.Icon icon="filter"
-                                           style={{width: 20, height: 20, marginLeft: 120, backgroundColor: '#fff'}}/>}
-                />
+                {/*<TextInput*/}
+                {/*    dense*/}
+                {/*    mode="outlined"*/}
+                {/*    outlineStyle={{height: 40, borderRadius: 40}}*/}
+                {/*    style={styles.input}*/}
+                {/*    placeholder="Search"*/}
+                {/*    onChangeText={(text) => searchTransaction(text)}*/}
+                {/*    right={<TextInput.Icon icon="filter"*/}
+                {/*                           style={{width: 20, height: 20, marginLeft: 120, backgroundColor: '#fff'}}/>}*/}
+                {/*/>*/}
             </View>
             <View style={{marginTop: 10}}>
                 {

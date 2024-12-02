@@ -16,7 +16,7 @@ export default function AllIDsScreen({navigation}){
                     <List.Item
                         style={styles.list}
                         onPress={() => navigation.navigate('Create')}
-                        title="Create ABSSIN"
+                        title="Create ID"
                         // description="Click here"
                         titleStyle={{
                             color: '#292D32',
@@ -41,7 +41,7 @@ export default function AllIDsScreen({navigation}){
                     <List.Item
                         style={styles.list}
                         onPress={() => navigation.navigate('Create Business')}
-                        title="Create Business ABSSIN"
+                        title="Create Business ID"
                         // description="Click here"
                         titleStyle={{
                             color: '#292D32',

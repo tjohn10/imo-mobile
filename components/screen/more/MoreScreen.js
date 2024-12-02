@@ -49,28 +49,6 @@ export default function MoreScreen({navigation}) {
             icon: electricity
         }
     ]
-    const others = [
-        {
-            name: 'About',
-            icon: about,
-            action: 'About'
-        },
-        {
-            name: 'Feedback',
-            icon: pass,
-            action: ''
-        },
-        {
-            name: 'Support',
-            icon: support,
-            action: 'Support'
-        },
-        {
-            name: 'Change Password',
-            icon: security,
-            action: 'Password'
-        }
-    ]
 
     return (
         <ScrollView style={styles.container}>
@@ -85,9 +63,6 @@ export default function MoreScreen({navigation}) {
 
                     </View>
                 </View>
-                <Button onPress={() =>logout()}>
-                    <Image source={signout} style={{width: 30, height: 30, marginTop: 30, marginRight: 10}} />
-                </Button>
             </View>
             <View style={{marginTop: 5}}>
                 <Text style={styles.sectionTitle}>My Money Transfer</Text>
@@ -142,14 +117,14 @@ export default function MoreScreen({navigation}) {
             <View>
                 <Image source={banner} style={styles.banner} />
             </View>
-
+            {/*Daily Services*/}
             <Card style={styles.card}>
                 <Text style={{fontWeight: 'bold', marginLeft: 15, marginTop: 10}}>Daily Services</Text>
                 <FlatList
                     data={dailyServices}
                     numColumns={4}
                     renderItem={({item, index}) => (
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => Alert.alert('Coming Soon', 'Feature Not Available. Look out in our Upcoming Releases')}>
                             <Card style={styles.menuCards} key={index} mode="contained">
                                 <Card.Content>
                                     <Image
@@ -187,30 +162,76 @@ export default function MoreScreen({navigation}) {
             </Card>
             <Card style={styles.card2}>
                 <Text style={{fontWeight: 'bold', marginLeft: 15}}>Other Services</Text>
-                <FlatList
-                    data={others}
-                    numColumns={4}
-                    renderItem={({item, index}) => (
-                        <TouchableOpacity onPress={() => navigation.navigate(item.action)} key={index}>
-                            <Card style={styles.menuCards} mode="contained">
-                                <Card.Content>
-                                    <Image
-                                        style={{
-                                            width: 20,
-                                            height: 20,
-                                            flexShrink: 0,
-                                            marginLeft: "auto",
-                                            marginRight: "auto",
-                                        }}
-                                        source={item.icon}
-                                    />
-                                    <Text style={styles.menuText}>{item.name}</Text>
-                                </Card.Content>
-                            </Card>
-                        </TouchableOpacity>
-                    )}
-                    keyExtractor={(item) => item.alt}
-                />
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    <TouchableOpacity onPress={() => navigation.navigate('About')}>
+                        <Card style={styles.menuCards} mode="contained">
+                            <Card.Content>
+                                <Image
+                                    style={{
+                                        width: 20,
+                                        height: 20,
+                                        flexShrink: 0,
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                    }}
+                                    source={about}
+                                />
+                                <Text style={styles.menuText}>About</Text>
+                            </Card.Content>
+                        </Card>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Password')}>
+                        <Card style={styles.menuCards} mode="contained">
+                            <Card.Content>
+                                <Image
+                                    style={{
+                                        width: 20,
+                                        height: 20,
+                                        flexShrink: 0,
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                    }}
+                                    source={security}
+                                />
+                                <Text style={styles.menuText}>Forgot Password</Text>
+                            </Card.Content>
+                        </Card>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Support')}>
+                        <Card style={styles.menuCards} mode="contained">
+                            <Card.Content>
+                                <Image
+                                    style={{
+                                        width: 20,
+                                        height: 20,
+                                        flexShrink: 0,
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                    }}
+                                    source={support}
+                                />
+                                <Text style={styles.menuText}>Support</Text>
+                            </Card.Content>
+                        </Card>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => logout()}>
+                        <Card style={styles.menuCards} mode="contained">
+                            <Card.Content>
+                                <Image
+                                    style={{
+                                        width: 20,
+                                        height: 20,
+                                        flexShrink: 0,
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                    }}
+                                    source={signout}
+                                />
+                                <Text style={styles.menuText}>Logout</Text>
+                            </Card.Content>
+                        </Card>
+                    </TouchableOpacity>
+                </View>
             </Card>
 
             <Text style={{fontWeight: '800', fontSize: 16, marginTop: 20, marginBottom: 20, textAlign: 'left', marginLeft: 20}}>{version_num}</Text>
@@ -308,7 +329,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 14,
         fontWeight: 'bold',
-        marginLeft: 20,
+        marginLeft: 30,
         marginTop: 15,
         marginBottom: 10
     },

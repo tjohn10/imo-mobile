@@ -189,13 +189,6 @@ export default function AllTicketsScreen({navigation}){
                             fontWeight: '700',
                             lineHeight: 20
                         }}
-                        descriptionStyle={{
-                            color: '#09893E',
-                            fontFamily: 'DMSans_400Regular',
-                            fontSize: 8,
-                            fontStyle: 'normal',
-                            fontWeight: '400',
-                        }}
                         left={props => <Image source={validate} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
                         right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}
                     />
@@ -213,41 +206,27 @@ export default function AllTicketsScreen({navigation}){
                             fontWeight: '700',
                             lineHeight: 20
                         }}
-                        descriptionStyle={{
-                            color: '#09893E',
-                            fontFamily: 'DMSans_400Regular',
-                            fontSize: 8,
-                            fontStyle: 'normal',
-                            fontWeight: '400',
-                        }}
                         left={props => <Image source={validate} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
                         right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}
                     />
                 </TouchableOpacity>
-                {/*<TouchableOpacity>*/}
-                {/*    <List.Item*/}
-                {/*        style={styles.list}*/}
-                {/*        onPress={() => navigation.navigate('Transport')}*/}
-                {/*        title="Transport Emblem"*/}
-                {/*        titleStyle={{*/}
-                {/*            color: '#292D32',*/}
-                {/*            fontSize: 14,*/}
-                {/*            fontFamily: 'DMSans_500Medium',*/}
-                {/*            fontStyle: 'normal',*/}
-                {/*            fontWeight: '700',*/}
-                {/*            lineHeight: 20*/}
-                {/*        }}*/}
-                {/*        descriptionStyle={{*/}
-                {/*            color: '#09893E',*/}
-                {/*            fontFamily: 'DMSans_400Regular',*/}
-                {/*            fontSize: 8,*/}
-                {/*            fontStyle: 'normal',*/}
-                {/*            fontWeight: '400',*/}
-                {/*        }}*/}
-                {/*        left={props => <Image source={transaction} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}*/}
-                {/*        right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}*/}
-                {/*    />*/}
-                {/*</TouchableOpacity>*/}
+                <TouchableOpacity>
+                    <List.Item
+                        style={styles.list}
+                        onPress={() => navigation.navigate('Transport')}
+                        title="Transport Emblem"
+                        titleStyle={{
+                            color: '#292D32',
+                            fontSize: 14,
+                            fontFamily: 'DMSans_500Medium',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            lineHeight: 20
+                        }}
+                        left={props => <Image source={transaction} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
+                        right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}
+                    />
+                </TouchableOpacity>
                 <TouchableOpacity>
                     <List.Item
                         style={styles.list}
@@ -260,13 +239,6 @@ export default function AllTicketsScreen({navigation}){
                             fontStyle: 'normal',
                             fontWeight: '700',
                             lineHeight: 20
-                        }}
-                        descriptionStyle={{
-                            color: '#09893E',
-                            fontFamily: 'DMSans_400Regular',
-                            fontSize: 8,
-                            fontStyle: 'normal',
-                            fontWeight: '400',
                         }}
                         left={props => <Image source={market} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
                         right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}
@@ -287,13 +259,6 @@ export default function AllTicketsScreen({navigation}){
                             fontWeight: '700',
                             lineHeight: 20
                         }}
-                        descriptionStyle={{
-                            color: '#09893E',
-                            fontFamily: 'DMSans_400Regular',
-                            fontSize: 8,
-                            fontStyle: 'normal',
-                            fontWeight: '400',
-                        }}
                         left={props => <Image source={tolls} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
                         right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}
                     />
@@ -311,41 +276,29 @@ export default function AllTicketsScreen({navigation}){
                             fontWeight: '700',
                             lineHeight: 20
                         }}
-                        descriptionStyle={{
-                            color: '#09893E',
-                            fontFamily: 'DMSans_400Regular',
-                            fontSize: 8,
-                            fontStyle: 'normal',
-                            fontWeight: '400',
-                        }}
                         left={props => <Image source={corporate} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
                         right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}
                     />
                 </TouchableOpacity>
-                {/*<TouchableOpacity>*/}
-                {/*    <List.Item*/}
-                {/*        style={styles.list}*/}
-                {/*        onPress={() => navigation.navigate('Presumptive')}*/}
-                {/*        title="Drivers' Presumptive Tax"*/}
-                {/*        titleStyle={{*/}
-                {/*            color: '#292D32',*/}
-                {/*            fontSize: 14,*/}
-                {/*            fontFamily: 'DMSans_500Medium',*/}
-                {/*            fontStyle: 'normal',*/}
-                {/*            fontWeight: '700',*/}
-                {/*            lineHeight: 20*/}
-                {/*        }}*/}
-                {/*        descriptionStyle={{*/}
-                {/*            color: '#09893E',*/}
-                {/*            fontFamily: 'DMSans_400Regular',*/}
-                {/*            fontSize: 8,*/}
-                {/*            fontStyle: 'normal',*/}
-                {/*            fontWeight: '400',*/}
-                {/*        }}*/}
-                {/*        left={props => <Image source={tax} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}*/}
-                {/*        right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}*/}
-                {/*    />*/}
-                {/*</TouchableOpacity>*/}
+                <TouchableOpacity>
+                    <List.Item
+                        style={styles.list}
+                        onPress={() => navigation.navigate('Concessionaire', {
+                            screen: 'Loading'
+                        })}
+                        title="Loading/Offloading"
+                        titleStyle={{
+                            color: '#292D32',
+                            fontSize: 14,
+                            fontFamily: 'DMSans_500Medium',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            lineHeight: 20
+                        }}
+                        left={props => <Image source={transaction} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
+                        right={props => <List.Icon {...props} icon="arrow-right" color="#91DBB0"/>}
+                    />
+                </TouchableOpacity>
                 <TouchableOpacity>
                     <List.Item
                         style={styles.list}
@@ -357,12 +310,6 @@ export default function AllTicketsScreen({navigation}){
                             fontStyle: 'normal',
                             fontWeight: '700',
                             lineHeight: 20
-                        }}
-                        descriptionStyle={{
-                            color: '#09893E',
-                            fontSize: 8,
-                            fontStyle: 'normal',
-                            fontWeight: '400',
                         }}
                         // left={props => <List.Image {...props} source={box} style={{width: 12, height: 12}}/> }
                         right={props => <List.Icon {...props} icon="chevron-right" color="#09893E"/>}
@@ -381,13 +328,6 @@ export default function AllTicketsScreen({navigation}){
                             fontStyle: 'normal',
                             fontWeight: '700',
                             lineHeight: 20
-                        }}
-                        descriptionStyle={{
-                            color: '#09893E',
-                            fontFamily: 'DMSans_500Medium',
-                            fontSize: 8,
-                            fontStyle: 'normal',
-                            fontWeight: '400',
                         }}
                         left={props => <Image source={transfer} {...props} style={{width: 24, height: 24, margin: 15, backgroundColor: '#EAFFF3', paddingTop: 11}}/>}
                         right={props => <List.Icon {...props} icon="chevron-right" color="#09893E" />}

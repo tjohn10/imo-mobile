@@ -24,9 +24,9 @@ import success from "../../../assets/success.png";
 import cancel from "../../../assets/cancel.png";
 import {registerForPushNotificationsAsync} from "../../../AppNav";
 
-export default function Ticket1Screen({navigation, route}) {
+export default function PayWIthEnumScreen({navigation, route}) {
     const [ticketType, setTicketType] = useState()
-    const [plateNo, setPlateNo] = useState('')
+    const [enumID, setEnumID] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -36,7 +36,6 @@ export default function Ticket1Screen({navigation, route}) {
     const [amount, setAmount] = useState('')
     const [paymentPeriod, setPaymentPeriod] = useState()
     const [invoiceId, setInvoiceId] = useState('')
-    const [collectionType, setCollectionType] = useState([])
     const [walletBalance, setWalletBalance] = useState([])
     const [vehicleType, setVehicleType] = useState([])
     const [errorText, setErrorText] = useState('')
@@ -99,14 +98,13 @@ export default function Ticket1Screen({navigation, route}) {
         });
         navigation.addListener('focus', () => {
             setTicketType()
-            setPlateNo('')
+            setEnumID('')
             setName('')
             setPhoneNumber('')
             setPaymentDescription('')
             setAmount('')
             setEmail('')
-        });
-        getCollectionType()
+        })
         getVehicleType()
         generateRandomString()
     }, [isFocused]);
@@ -117,7 +115,7 @@ export default function Ticket1Screen({navigation, route}) {
         return setInvoiceId(randomString);
     }
 
-    const getPlateNumberInfo = () => {
+    const getEnumDetails = () => {
         fetch(`${MOBILE_API}transport/get-plate-number-info`, {
             method: 'POST',
             headers: {
@@ -134,22 +132,6 @@ export default function Ticket1Screen({navigation, route}) {
                 setName(resJson.data.Name)
                 setPhoneNumber(resJson.data.Phone)
                 setEmail(resJson.data.Email)
-            })
-    }
-    const getCollectionType = () => {
-        fetch(`${FUNNY_API}agent/payment-method`, {
-            headers: {
-                'content-type': 'application/json',
-                'accept': 'application/json'
-            },
-        })
-            .then((res) => res.json())
-            .then((responseJson) => {
-                setCollectionType(responseJson)
-                console.log(responseJson, 'collection')
-            })
-            .catch((e) => {
-                console.log(e, 'collect')
             })
     }
     const getVehicleType = () => {
@@ -187,36 +169,31 @@ export default function Ticket1Screen({navigation, route}) {
         navigation.addListener('focus', () => {
             console.log("reloaded");
             setTicketType()
-            setPlateNo('')
             setName('')
             setPhoneNumber('')
             setPaymentDescription('')
             setAmount('')
             setEmail('')
-            setPlateNo('')
+            setEnumID('')
         });
         setTicketType()
-        setPlateNo('')
         setName('')
         setPhoneNumber('')
         setPaymentDescription('')
         setAmount('')
         setEmail('')
-        setPlateNo('')
+        setEnumID('')
     }
     const onSubmit = async () => {
         const alphanumericRegex = /^[a-zA-Z0-9\s]+$/;
-        if (ticketType === null || plateNo === '' || name === '' || phoneNumber === "" || email === '') {
+        if (ticketType === null || enumID === '' || name === '' || phoneNumber === "" || email === '') {
             setErrorText('Please Enter all fields')
             Alert.alert('Error', 'Please enter all fields')
-        } else if (plateNo === alphanumericRegex.test(plateNo)) {
-            setErrorText('Please Enter only alphanumeric characters')
-            Alert.alert('Error', 'Please Enter only alphanumeric characters')
         } else {
             TicketStore.update((s) => {
                 s.progress = 33;
                 s.ticketType = ticketType.productCode;
-                s.plateNo = plateNo;
+                s.plateNo = plateNo.toUpperCase();
                 s.vehicleInfo = ticketType
                 s.name = name;
                 s.email = email
@@ -265,7 +242,7 @@ export default function Ticket1Screen({navigation, route}) {
                     transaction_date: Moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
                     invoice_id: invoiceId,
                     agentEmail: userInfo.email,
-                    plateNumber: plateNo,
+                    plateNumber: enumID,
                     paymentPeriod: paymentPeriod,
                     productCode: ticketType.productCode,
                     taxPayerPhone: phoneNumber,
@@ -273,7 +250,7 @@ export default function Ticket1Screen({navigation, route}) {
                     next_expiration_date: nextPayment,
                     no_of_days: ticket.paymentPeriod,
                     amount: amount,
-                    wallet_type: walletType
+                    // wallet_type: walletType
                 }),
                 signal: Timeout(25).signal
             },).then((res) => res.json())
@@ -377,24 +354,18 @@ export default function Ticket1Screen({navigation, route}) {
                     </Picker>
                 </View>
                 <View style={{marginTop: 5}}>
-                    <Text style={styles.label}>Vehicle Plate Number</Text>
+                    <Text style={styles.label}>Enumeration ID</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Vehicle Plate Number"
+                        placeholder="Enumeration ID"
                         placeholderTextColor="#C4C4C4"
-                        value={plateNo}
-                        maxLength={8}
+                        value={enumID}
+                        maxLength={12}
                         autoCapitalize={"characters"}
                         returnKeyType="next"
                         underlineColorAndroid="#f000"
                         blurOnSubmit={false}
-                        onSubmitEditing={() => {
-                            getPlateNumberInfo()
-                        }}
-                        onEndEditing={() => {
-                            getPlateNumberInfo()
-                        }}
-                        onChangeText={text => setPlateNo(text)}
+                        onChangeText={text => setEnumID(text)}
                     />
                 </View>
                 <View style={{marginTop: 5}}>
