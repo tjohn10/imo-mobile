@@ -66,10 +66,11 @@ export default function VehicleInformation({navigation}) {
     }
 
     const getStates = () => {
-        fetch(`${PORTAL_API}state`, {
+        fetch(`${MOBILE_API}state`, {
             headers:{
                 'accept': 'application/json',
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                Authorization: 'Bearer' + userToken
             },
             method: 'post'
         }).then((res) => res.json())
@@ -287,7 +288,7 @@ export default function VehicleInformation({navigation}) {
                             placeholder="Engine Number"
                             placeholderTextColor="#C4C4C4"
                             value={engineNumber}
-                            maxLength={11}
+                            autoCapitalize={'characters'}
                             returnKeyType="next"
                             underlineColorAndroid="#f000"
                             blurOnSubmit={false}
@@ -301,6 +302,7 @@ export default function VehicleInformation({navigation}) {
                             placeholder="Chassis Number"
                             placeholderTextColor="#C4C4C4"
                             value={chassisNumber}
+                            autoCapitalize={'characters'}
                             returnKeyType="next"
                             underlineColorAndroid="#f000"
                             blurOnSubmit={false}

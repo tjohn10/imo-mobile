@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SliderBox } from "react-native-image-slider-box";
 import notification from "../../assets/icons/notification.png";
 import verify from "../../assets/icons/verify.png";
 import abs from "../../assets/icons/abssin.png";
@@ -68,6 +67,7 @@ const images = [
 
 export default function HomeScreen({ navigation, route }) {
   const [totalTickets, setTotalTickets] = useState();
+  const [walletName, setWalletName] = useState('')
   // const [totalEarnings, setTotalEarnings] = useState(0)
   const [walletBalance, setWalletBalance] = useState([]);
   const [fidelityBalance, setFidelityBalance] = useState([]);
@@ -133,67 +133,24 @@ export default function HomeScreen({ navigation, route }) {
     const url = `${MOBILE_API}dashboard/data`;
     await fetch(url, {
       headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
         Authorization: "Bearer" + userToken,
       },
       method: "POST",
     })
-      .then((res) => res.json())
-      .then((responseJson) => {
-        setLoading(false);
-        setWalletBalance(responseJson);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-  const getFidelityDetails = async () => {
-    setLoading(true);
-    // const url = `${MOBILE_API}dashboard/data`;
-    const url = 'https://sandboxapi.abssin.com/api/v1/paygate/get-account-details';
-    await fetch(url, {
-      headers: {
-        'content-type': "application/json",
-        'accept': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({
-        'email': info.email
-      })
-    })
-      .then((res) => res.json())
-      .then((responseJson) => {
-        setLoading(false);
-        setFidelityDetails(responseJson);
-        console.log(fidelityDetails, 'Fidelity')
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-  const getFidelityBalance = async () => {
-    setLoading(true);
-    // const url = `${MOBILE_API}dashboard/data`;
-    const url = 'https://sandboxapi.abssin.com/api/v1/paygate/get-balance';
-    await fetch(url, {
-      headers: {
-        'content-type': "application/json",
-        'accept': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({
-        'email': info.email
-      })
-    })
-      .then((res) => res.json())
-      .then((responseJson) => {
-        setLoading(false);
-        setFidelityBalance(responseJson);
-        console.log(fidelityBalance, 'Fidelity Balance')
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+        .then((res) => res.json())
+        .then((responseJson) => {
+          setLoading(false);
+          console.log(responseJson)
+          setWalletBalance(responseJson.access);
+          setFidelityBalance(responseJson.fidelity)
+          setWalletName(responseJson.name)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+  }
   const getTotalAbssin = () => {
     const url =
         `${MOBILE_API}abssin/manage-abssin`;
@@ -232,19 +189,12 @@ export default function HomeScreen({ navigation, route }) {
   useEffect(() => {
     navigation.addListener('focus', () => {
       getWalletDetails()
-      getFidelityDetails()
-      getFidelityBalance()
       getTotalAbssin();
       getTotalCollected()
       getTotalTickets();
       getTotalEnumeration();
     });
-    if(info.email === ''){
-      Alert.alert('Session Error', 'This is not meant to happen. kindly Login again to be able to continue',[{text: 'OK', onPress: () => logout()},])
-    }
     getWalletDetails();
-    getFidelityDetails()
-    getFidelityBalance()
     getTotalAbssin();
     getTotalCollected()
     getTotalTickets();
@@ -330,43 +280,43 @@ export default function HomeScreen({ navigation, route }) {
                 </View>
               </Card.Content>
             </Card>
-            {/*<Card style={[styles.card,{marginTop: 10}]}>*/}
-            {/*  <Card.Content>*/}
-            {/*    <View*/}
-            {/*    >*/}
-            {/*      <View  style={{*/}
-            {/*        display: "flex",*/}
-            {/*        flexDirection: "row",*/}
-            {/*        justifyContent: "space-between",*/}
-            {/*      }}>*/}
-            {/*        <Text style={styles.wallet}>*/}
-            {/*          Fidelity Wallet: {fidelityDetails.account_number}*/}
-            {/*        </Text>*/}
-            {/*        <Image style={{width: 27, height: 27, marginRight: 10, marginTop: -10}} source={fidelity} />*/}
-            {/*      </View>*/}
-            {/*      <View style={{*/}
-            {/*        display: "flex",*/}
-            {/*        flexDirection: "row",*/}
-            {/*        justifyContent: "space-between",*/}
-            {/*      }}>*/}
-            {/*        <Text style={styles.amount}>*/}
-            {/*          &#8358; {Intl.NumberFormat("en-US",options).format(fidelityBalance.balance) || 0}*/}
-            {/*        </Text>*/}
-            {/*        <Text style={styles.amount}>*/}
-            {/*          &#8358; {Intl.NumberFormat("en-US",options).format(fidelityBalance.earnings)}*/}
-            {/*        </Text>*/}
-            {/*      </View>*/}
-            {/*      <View style={{*/}
-            {/*        display: "flex",*/}
-            {/*        flexDirection: "row",*/}
-            {/*        justifyContent: "space-between",*/}
-            {/*      }}>*/}
-            {/*        /!*<Text style={styles.collected}>Ledger Balance: &#8358; {Intl.NumberFormat("en-US",options).format(walletBalance.ledger_balance)}</Text>*!/*/}
-            {/*        <Text style={styles.collected}>Total Collected: &#8358; {Intl.NumberFormat("en-US",options).format(total.total_amount) || 0}</Text>*/}
-            {/*      </View>*/}
-            {/*    </View>*/}
-            {/*  </Card.Content>*/}
-            {/*</Card>*/}
+            <Card style={[styles.card,{marginTop: 10}]}>
+              <Card.Content>
+                <View
+                >
+                  <View  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}>
+                    <Text style={styles.wallet}>
+                      Fidelity Wallet: {fidelityDetails.account_number}
+                    </Text>
+                    <Image style={{width: 27, height: 27, marginRight: 10, marginTop: -10}} source={fidelity} />
+                  </View>
+                  <View style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}>
+                    <Text style={styles.amount}>
+                      &#8358; {Intl.NumberFormat("en-US",options).format(fidelityBalance.balance) || 0}
+                    </Text>
+                    <Text style={styles.amount}>
+                      &#8358; {Intl.NumberFormat("en-US",options).format(fidelityBalance.earnings)}
+                    </Text>
+                  </View>
+                  <View style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}>
+                    {/*<Text style={styles.collected}>Ledger Balance: &#8358; {Intl.NumberFormat("en-US",options).format(walletBalance.ledger_balance)}</Text>*/}
+                    <Text style={styles.collected}>Total Collected: &#8358; {Intl.NumberFormat("en-US",options).format(total.total_amount) || 0}</Text>
+                  </View>
+                </View>
+              </Card.Content>
+            </Card>
           </ScrollView>
           <View style={{flexDirection: "row",  marginLeft: "auto",
             marginRight: "auto" }}>
@@ -404,7 +354,7 @@ export default function HomeScreen({ navigation, route }) {
                     }}
                     source={abs}
                 />
-                <Text style={styles.absText}>ABSSIN</Text>
+                <Text style={styles.absText}>IID</Text>
                 <Text style={styles.numbers}>{totalAbssin}</Text>
               </Card.Content>
             </Card>

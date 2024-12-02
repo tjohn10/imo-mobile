@@ -20,6 +20,7 @@ import {Modal, PaperProvider, Portal} from "react-native-paper";
 import success from "../../../assets/success.png";
 import cancel from "../../../assets/cancel.png";
 import {ConcessionStore} from "../../../store";
+import {Timeout} from "../../../timeout";
 
 export default function LoadingScreen({navigation}){
     const [vehicleType, setVehicleType] = useState()
@@ -34,6 +35,7 @@ export default function LoadingScreen({navigation}){
     const [amount, setAmount] = useState('')
     const [errorText, setErrorText] = useState('')
     const [paymentMethod, setPaymentMethod] = useState()
+    const [walletType, setWalletType] = useState()
     const [payments, setPayments] = useState([])
     const [gateResponse, setGateResponse] = useState([])
     const [loading, setLoading] = useState(false);
@@ -53,10 +55,10 @@ export default function LoadingScreen({navigation}){
     const {userToken} = useContext(AuthContext)
     const isFocused = useIsFocused();
     useEffect(() => {
-        getGateRates()
-        getCollectionType()
+        getVehicleTypes()
+        setWalletType('fidelity')
     }, []);
-    const getGateRates = () => {
+    const getVehicleTypes = () => {
         fetch(`${CENTRAL_API}agent/concessionaires-product-codes?category=LoadingOffloading`, {
             headers:{
                 'Accept': 'application/json',
@@ -87,22 +89,6 @@ export default function LoadingScreen({navigation}){
             .then((resJson) => {
                 setName(resJson.data.Name)
                 setPhone(resJson.data.Phone)
-            })
-    }
-    const getCollectionType = () => {
-        fetch(`${FUNNY_API}CollectionType`, {
-            headers:{
-                'X-IBM-Client-Id': '26e9ccd3bc07c0dc1627609afcf4699d',
-                'content-type': 'application/json',
-                'accept': 'application/json'
-            },
-        })
-            .then((res)=>res.json())
-            .then((responseJson) => {
-                setPayments(responseJson)
-            })
-            .catch((e) => {
-                console.log(e)
             })
     }
     const populateAmount = (value) => {
@@ -140,7 +126,7 @@ export default function LoadingScreen({navigation}){
             })
             showModal()
             setLoading(true)
-            fetch(`${MOBILE_API}transport/create-haulage`, {
+            fetch(`${MOBILE_API}ticket/loading-offloading`, {
                 headers: {
                     'accept': 'application/json',
                     Authorization: "Bearer" + userToken,
@@ -154,13 +140,15 @@ export default function LoadingScreen({navigation}){
                     "vehicle_content": content,
                     "product_code": tonnage.productCode,
                     "category": "LoadingOffloading",
-                    "taxPayerPhone": phone,
-                    "taxPayerName": name,
-                    "plateNumber": plateNumber,
+                    "tax_payer_phone": phone,
+                    "tax_payer_name": name,
+                    "plate_number": plateNumber,
                     "collection_point": collectionPoint,
                     "payment_period": "1Day",
-                    "amount": amount
-                })
+                    "amount": amount,
+                    "wallet_type": walletType
+                }),
+                signal: Timeout(25).signal
             })
                 .then((res) => res.json())
                 .then((responseJson) => {
@@ -169,7 +157,7 @@ export default function LoadingScreen({navigation}){
                     console.log(gateResponse)
                 })
                 .catch((e) => {
-                    console.log(e)
+                    console.log(e.message)
                 })
         }
     }
@@ -184,7 +172,7 @@ export default function LoadingScreen({navigation}){
                             loading ? <ActivityIndicator color="#09893E" size="large"/> : (
                                 <View style={{marginTop: 10, marginLeft: 16}}>
                                     {
-                                        gateResponse.response_code === '00' || gateResponse.response_code === '01' ? (
+                                        gateResponse.responseCode === '00' || gateResponse.response_code === '01' ? (
                                             <View>
                                                 <Image style={{
                                                     width: 100,
@@ -194,12 +182,12 @@ export default function LoadingScreen({navigation}){
                                                     marginTop: 6,
                                                     marginBottom: 6,
                                                 }} source={success}/>
-                                                <Text style={{fontWeight: '700', textAlign: 'center'}}>{gateResponse.response_message || 'Payment Successful'}</Text>
-                                                <Text style={{fontWeight: '700', textAlign: 'center'}}>REF: {gateResponse.payment_ref}</Text>
+                                                <Text style={{fontWeight: '700', textAlign: 'center'}}>{gateResponse.data.response_message || 'Payment Successful'}</Text>
+                                                <Text style={{fontWeight: '700', textAlign: 'center'}}>REF: {gateResponse.data.payment_ref}</Text>
                                                 <Button
                                                     title="Show Receipt"
                                                     titleStyle={styles.btnText}
-                                                    onPress={() => navigation.navigate("Done", {params: gateResponse})}
+                                                    onPress={() => navigation.navigate("Concession Receipt", {params: gateResponse})}
                                                     buttonStyle={styles.modalButton}/>
                                                 <Button
                                                     title="Create New"
@@ -234,18 +222,6 @@ export default function LoadingScreen({navigation}){
                         }
                     </Modal>
                 </Portal>
-                {/*<View style={{marginTop: 5}}>*/}
-                {/*    <Text style={styles.label}>Penalty Status</Text>*/}
-                {/*    <Picker*/}
-                {/*        style={styles.dropdown}*/}
-                {/*        selectedValue={penalty}*/}
-                {/*        onValueChange={(itemValue, itemIndex) => {*/}
-                {/*            setPenalty(itemValue)*/}
-                {/*        }}>*/}
-                {/*        <Picker.Item label="No Penalty" value="No-Penalty" />*/}
-                {/*        <Picker.Item label="Penalty" value="Penalty" />*/}
-                {/*    </Picker>*/}
-                {/*</View>*/}
                 <View style={{marginTop: 5}}>
                     <Text style={styles.label}>Vehicle Type</Text>
                     <Picker
@@ -354,19 +330,15 @@ export default function LoadingScreen({navigation}){
                     />
                 </View>
                 <View style={{marginTop: 5}}>
-                    <Text style={styles.label}>Payment Method</Text>
+                    <Text style={styles.label}>Select Wallet</Text>
                     <Picker
                         style={styles.dropdown}
-                        selectedValue={paymentMethod}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setPaymentMethod(itemValue)
-                        }>
-                        {
-                            payments.map((item, index) =>{
-                                return   <Picker.Item key={index} label={item.name} value={item.name} />
-                            })
-                        }
-
+                        selectedValue={walletType}
+                        onValueChange={(itemValue, itemIndex) => {
+                            setWalletType(itemValue)
+                        }}>
+                        <Picker.Item label="Fidelity" value="fidelity"/>
+                        <Picker.Item label="Access" value="access"/>
                     </Picker>
                 </View>
                 {errorText !== '' ? (

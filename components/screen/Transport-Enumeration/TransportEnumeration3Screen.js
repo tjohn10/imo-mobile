@@ -10,15 +10,12 @@ import {
     ActivityIndicator,
     ScrollView, TextInput, ImageBackground
 } from "react-native";
-import abia from '../../../assets/abia-new.png'
+import abia from '../../../assets/logo.png'
 import {Button} from "react-native-elements";
 import {useForm} from "react-hook-form";
 import {AuthStore, TicketStore, TransportEnumerationStore} from "../../../store";
 import {useIsFocused} from "@react-navigation/native";
 import {Card, Divider, MD3Colors, Modal, PaperProvider, Portal, ProgressBar} from "react-native-paper";
-import ticket from "../../../assets/icons/ticket1.png";
-import abs from "../../../assets/icons/abssin.png";
-import enumeration from "../../../assets/icons/enum.png";
 import {merchant_key, MOBILE_API} from "../../../config";
 import {Picker} from "@react-native-picker/picker";
 import {AuthContext} from "../../../context/AuthContext";
@@ -26,15 +23,15 @@ import success from "../../../assets/success.png";
 import cancel from "../../../assets/cancel.png";
 import Moment from "moment";
 import QRCode from "react-native-qrcode-svg";
-import background from "../../../assets/background.png";
 
 export default function TransportEnumeration3Screen({navigation, route}){
     const [loading, setLoading] = useState(false)
     const [revenueYear, setRevenueYear] = useState()
     const [location, setLocation] = useState()
+    const [walletType, setWalletType] = useState()
     const [dailyTicket, setDailyTicket] = useState('')
     const [enumFee, setEnumFee] = useState('')
-    const [email, setEmail] = useState('')
+    const [driverAddress, setDriverAddress] = useState('')
     const [driverName, setDriverName] = useState('')
     const [driverAbssin, setDriverAbssin] = useState('')
     const [driverPhone, setDriverPhone] = useState('')
@@ -47,24 +44,26 @@ export default function TransportEnumeration3Screen({navigation, route}){
     const [taxpayerCategory, setTaxpayerCategory] = useState()
     const [enumResponse, setEnumResponse] = useState([])
 
-    const response = route.params.params.response
-    const plate = route.params.params.plateNumber
-    const name = response.vehicle_owner.ownerName
-    const address = response.vehicle_owner.ownerAddress
-    const abssin = response.vehicle_owner.abssin
+    const response = route.params.response
+    const plate = route.params.plateNumber
+    console.log(response, 'response')
+    const name = route.params.ownerName
+    const address = route.params.address
+    // const abssin = response.params.params.abssin
 
     const data = TransportEnumerationStore.useState()
 
     useEffect(() => {
         if (response.driver.photoUrl !== null){
-            setImage( response.driver.photoUrl)
+            setImage(`data:image/png;base64,${response.driver.photoUrl}`)
         }else if(response.driver.photoUrl === "") {
             setImage('https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=')
         }
         getLocalGovernments()
+        setWalletType('access')
         setDriverPhone(response.driver.phoneNumber)
         setDriverName(response.driver.driverName)
-        setDriverAbssin(response.driver.abssin)
+        setDriverAddress(response.driver.driverAddress)
     }, []);
 
     const showModal = () => setVisible(true);
@@ -125,7 +124,7 @@ export default function TransportEnumeration3Screen({navigation, route}){
             },
             method: 'POST',
             body: JSON.stringify({
-                "email": email,
+                "address": driverAddress,
                 "name": driverName,
                 "phone": driverPhone,
                 "contact_type": 'driver',
@@ -143,19 +142,20 @@ export default function TransportEnumeration3Screen({navigation, route}){
                     },
                     body: JSON.stringify({
                         "taxpayer_category": 'Individual',
-                        "abssin": driverAbssin,
+                        "abssin": ' ',
                         "vehicle_plate_number": plate,
                         "taxpayer_name": driverName,
                         "taxpayer_phone": driverPhone,
                         "revenue_year": revYear,
                         "taxpayer_location": location,
                         "operating_park": data.park,
-                        "trade_union": data.union,
+                        "trade_union": ' ',
                         "vehicle_category": data.vehicleCategory,
                         "owner_name": name,
                         "owner_address": address,
                         "daily_ticket_amount": data.dailyAmount,
                         "enumeration_fee": data.enumFee,
+                        "wallet_type": walletType,
                         "merchant_key": merchant_key
                     }),
                     method: 'POST'
@@ -197,7 +197,7 @@ export default function TransportEnumeration3Screen({navigation, route}){
                                                             <Image style={{width: 60, height: 60, marginTop: -10, alignSelf: 'center'}} source={abia} />
                                                         </View>
                                                         <View>
-                                                            <Text style={{fontWeight: 'bold', color: '#367443', textAlign: 'center', fontSize: 19, marginTop: 0}}>ABIA STATE GOVERNMENT</Text>
+                                                            <Text style={{fontWeight: 'bold', color: '#367443', textAlign: 'center', fontSize: 19, marginTop: 0}}>IMO STATE GOVERNMENT</Text>
                                                             <Text style={{fontWeight: 'bold', color: '#367443', fontSize: 13, textAlign: 'center', marginTop: 0}}>MINISTRY OF TRANSPORT</Text>
                                                             <Text style={{fontWeight: 'bold', color: '#000', fontSize: 12, textAlign: 'center', marginTop: 0}}>ENUMERATION</Text>
                                                         </View>
@@ -289,37 +289,24 @@ export default function TransportEnumeration3Screen({navigation, route}){
                         }
                     </Modal>
                 </Portal>
-
             <View>
                 <View style={{marginTop: 15, justifyContent: 'center'}}>
                     <Image style={{width: 150, height: 150, alignSelf: 'center' }} source={{uri: image}} />
                 </View>
-                <View style={{marginTop: 5}}>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        placeholderTextColor="#C4C4C4"
-                        value={email}
-                        returnKeyType="next"
-                        underlineColorAndroid="#f000"
-                        blurOnSubmit={false}
-                        onChangeText={(text) => setEmail(text)}
-                    />
-                </View>
-                <View style={{marginTop: 5}}>
-                    <Text style={styles.label}>ABSSIN</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="ABSSIN"
-                        placeholderTextColor="#C4C4C4"
-                        value={driverAbssin}
-                        returnKeyType="next"
-                        underlineColorAndroid="#f000"
-                        blurOnSubmit={false}
-                        onChangeText={(text) => setDriverAbssin(text)}
-                    />
-                </View>
+
+                {/*<View style={{marginTop: 5}}>*/}
+                {/*    <Text style={styles.label}>ABSSIN</Text>*/}
+                {/*    <TextInput*/}
+                {/*        style={styles.input}*/}
+                {/*        placeholder="ABSSIN"*/}
+                {/*        placeholderTextColor="#C4C4C4"*/}
+                {/*        value={driverAbssin}*/}
+                {/*        returnKeyType="next"*/}
+                {/*        underlineColorAndroid="#f000"*/}
+                {/*        blurOnSubmit={false}*/}
+                {/*        onChangeText={(text) => setDriverAbssin(text)}*/}
+                {/*    />*/}
+                {/*</View>*/}
                 <View style={{marginTop: 5}}>
                     <Text style={styles.label}>Driver's Name</Text>
                     <TextInput
@@ -347,6 +334,19 @@ export default function TransportEnumeration3Screen({navigation, route}){
                         onChangeText={(text) => setDriverPhone(text)}
                     />
                 </View>
+                <View style={{marginTop: 5}}>
+                    <Text style={styles.label}>Driver's Address</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Driver's Address"
+                        placeholderTextColor="#C4C4C4"
+                        value={driverAddress}
+                        returnKeyType="next"
+                        underlineColorAndroid="#f000"
+                        blurOnSubmit={false}
+                        onChangeText={(text) => setDriverAddress(text)}
+                    />
+                </View>
 
 
                 <View style={{ marginTop: 5 }}>
@@ -366,12 +366,34 @@ export default function TransportEnumeration3Screen({navigation, route}){
                         })}
                     </Picker>
                 </View>
-
+                <View style={{marginTop: 5}}>
+                    <Text style={styles.label}>Choose Wallet</Text>
+                    <Picker
+                        style={styles.dropdown}
+                        selectedValue={walletType}
+                        onValueChange={(itemValue, itemIndex) => {
+                            setWalletType(itemValue)
+                        }}>
+                        <Picker.Item label="Access" value="access"/>
+                        <Picker.Item label="Fidelity" value="fidelity"/>
+                    </Picker>
+                </View>
                 <View>
                     <Button
                         title="Process Enumeration"
                         titleStyle={styles.btnText}
-                        onPress={handleSubmit(onSubmit)}
+                        onPress={() => Alert.alert('Process Enumeration', 'You will be deducted the sum of 17,000 for this enumeration. Do you want to continue?', [
+                            {
+                                text: 'Continue',
+                                color: 'green',
+                                onPress: handleSubmit(onSubmit)
+                            },
+                            {
+                                text: 'Cancel'
+                            }
+                        ])
+
+                        }
                         buttonStyle={styles.nextBtnStyle}
                     />
                 </View>

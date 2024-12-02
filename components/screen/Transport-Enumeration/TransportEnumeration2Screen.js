@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {
     ActivityIndicator,
     Alert,
-    Dimensions, Image,
+    Dimensions, Image, Platform, Pressable,
     ScrollView,
     StyleSheet,
     Text,
@@ -15,23 +15,26 @@ import {Divider, MD3Colors, Modal, PaperProvider, Portal, ProgressBar} from "rea
 import success from "../../../assets/success.png";
 import cancel from "../../../assets/cancel.png";
 import {AuthContext} from "../../../context/AuthContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function TransportEnumeration2Screen({navigation, route}) {
-    const [email, setEmail] = useState('')
-    const [image, setImage] = useState()
+    const [address, setAddress] = useState('')
+    const [vehicleModel, setVehicleModel] = useState('')
+    const [image, setImage] = useState('')
     const [plateNumber, setPlateNumber] = useState('')
     const [abssin, setAbssin] = useState('')
     const [ownerName, setOwnerName] = useState('')
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(false)
     const [ownerPhone, setOwnerPhone] = useState('')
+    const [date, setDate] = useState(new Date())
+    const [expiryDate, setExpiryDate] = useState(Date())
     const [vehicleType, setVehicleType] = useState([]);
     const [saveResponse, setSaveResponse] = useState([]);
 
     const plate = route.params.params.plateNumber
     const response = route.params.params.plateNumberResponse.response_data
 
-    console.log(response, 'plate Number')
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
@@ -40,27 +43,47 @@ export default function TransportEnumeration2Screen({navigation, route}) {
         borderRadius: 10,
         marginLeft: 16}
     ;
+    const [showPicker, setShowPicker] = useState(false)
 
     useEffect(() => {
         if (response !== null) {
-            setEmail('')
+            setAddress('')
             if (response.vehicle_owner.photoUrl !== null){
                 setImage( response.vehicle_owner.photoUrl)
             }else {
                 setImage('https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=')
             }
             setPlateNumber(plate)
-            setAbssin(response.vehicle_owner.abssin)
+            setAddress(response.vehicle_owner.ownerAddress)
             setOwnerPhone(response.vehicle_owner.phoneNumber)
             setOwnerName(response.vehicle_owner.ownerName)
         } else {
-            setEmail('')
+            setAddress('')
             setOwnerName('')
             setOwnerPhone('')
             setPlateNumber(plate)
         }
+        setPlateNumber(plate)
     }, []);
     const {userToken} = useContext(AuthContext)
+
+    const toggleDatePicker = () => {
+        setShowPicker(!showPicker)
+    }
+    const onChange = ({type}, selectedDate) => {
+        if (type === 'set') {
+            const currentDate = selectedDate
+            setDate(currentDate)
+
+            if (Platform.OS === "android") {
+                toggleDatePicker()
+                setExpiryDate(currentDate.toDateString())
+            }
+
+        } else {
+            toggleDatePicker()
+        }
+    }
 
     const saveContact = () => {
         showModal()
@@ -73,7 +96,7 @@ export default function TransportEnumeration2Screen({navigation, route}) {
             },
             method: 'POST',
             body: JSON.stringify({
-                "email": email,
+                "address": address,
                 "name": ownerName,
                 "phone": ownerPhone,
                 "contact_type": 'Owner',
@@ -86,7 +109,6 @@ export default function TransportEnumeration2Screen({navigation, route}) {
                 setLoading(false)
                 setSaveResponse(responseJson)
                 // hideModal()
-                console.log(responseJson, "response")
             })
             .catch((e) => {
                 Alert.alert('Error Encountered', e.message)
@@ -128,7 +150,7 @@ export default function TransportEnumeration2Screen({navigation, route}) {
                                                 <Button
                                                     title="Continue"
                                                     titleStyle={styles.btnText}
-                                                    onPress={() => navigation.navigate('Order3',{params: {response, plateNumber}})}
+                                                    onPress={() => navigation.navigate('Order3',{plateNumber, response, ownerName, address})}
                                                     buttonStyle={styles.modalButton} />
                                             </View>
                                         ) : (
@@ -170,33 +192,6 @@ export default function TransportEnumeration2Screen({navigation, route}) {
                     borderWidth: 0.5,
                     borderColor: '#09893E'
                 }}/>
-
-                <View style={{marginTop: 5}}>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        placeholderTextColor="#C4C4C4"
-                        value={email}
-                        returnKeyType="next"
-                        underlineColorAndroid="#f000"
-                        blurOnSubmit={false}
-                        onChangeText={(text) => setEmail(text)}
-                    />
-                </View>
-                <View style={{marginTop: 5}}>
-                    <Text style={styles.label}>ABSSIN</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="ABSSIN"
-                        placeholderTextColor="#C4C4C4"
-                        value={abssin}
-                        returnKeyType="next"
-                        underlineColorAndroid="#f000"
-                        blurOnSubmit={false}
-                        onChangeText={(text) => setAbssin(text)}
-                    />
-                </View>
                 <View style={{marginTop: 5}}>
                     <Text style={styles.label}>Vehicle Owner Name</Text>
                     <TextInput
@@ -224,12 +219,66 @@ export default function TransportEnumeration2Screen({navigation, route}) {
                         onChangeText={(text) => setOwnerPhone(text)}
                     />
                 </View>
+                <View style={{marginTop: 5}}>
+                    <Text style={styles.label}>Owner's Address</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Address"
+                        placeholderTextColor="#C4C4C4"
+                        value={address}
+                        returnKeyType="next"
+                        underlineColorAndroid="#f000"
+                        blurOnSubmit={false}
+                        onChangeText={(text) => setAddress(text)}
+                    />
+                </View>
+                {/*<View style={{marginTop: 5}}>*/}
+                {/*    <Text style={styles.label}>Vehicle Model</Text>*/}
+                {/*    <TextInput*/}
+                {/*        style={styles.input}*/}
+                {/*        placeholder="Vehicle Model"*/}
+                {/*        placeholderTextColor="#C4C4C4"*/}
+                {/*        value={abssin}*/}
+                {/*        returnKeyType="next"*/}
+                {/*        underlineColorAndroid="#f000"*/}
+                {/*        blurOnSubmit={false}*/}
+                {/*        onChangeText={(text) => setAbssin(text)}*/}
+                {/*    />*/}
+                {/*</View>*/}
+                {/*<View>*/}
+                {/*    <Text style={styles.label}>Registration Expiry Date</Text>*/}
+                {/*    {showPicker && (*/}
+                {/*        <DateTimePicker*/}
+                {/*            value={date}*/}
+                {/*            mode="date"*/}
+                {/*            display="spinner"*/}
+                {/*            onChange={onChange}*/}
+                {/*        />*/}
+                {/*    )}*/}
+
+                {/*    {!showPicker && (*/}
+                {/*        <Pressable*/}
+                {/*            onPress={toggleDatePicker}*/}
+                {/*        >*/}
+                {/*            <TextInput*/}
+                {/*                label="Date"*/}
+                {/*                style={styles.input}*/}
+                {/*                placeholder="Date"*/}
+                {/*                placeholderTextColor="#e1e1e1"*/}
+                {/*                editable={false}*/}
+                {/*                value={expiryDate}*/}
+                {/*                onChangeText={text => setExpiryDate(text)}*/}
+                {/*                onPressIn={toggleDatePicker}*/}
+                {/*            />*/}
+                {/*        </Pressable>*/}
+                {/*    )}*/}
+                {/*</View>*/}
                 <View style={{marginTop: 20}}>
                     <Button
                         title="Save & Continue"
                         titleStyle={styles.btnText}
                         onPress={saveContact}
-                        // onPress={() => navigation.navigate('Order3', {params: {abssin, plateNumber, ownerName, ownerPhone}})}
+                        // onPress={() => navigation.navigate('Order3', {params: {plateNumber, ownerName, ownerPhone, address, expiryDate, vehicleModel}})}
                         buttonStyle={styles.nextBtnStyle}
                     />
                 </View>

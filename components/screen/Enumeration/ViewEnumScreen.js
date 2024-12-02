@@ -77,16 +77,16 @@ export default function ViewEnumScreen({navigation}) {
         return(
             <View style={{flexDirection: 'row'}}>
                 <Text style={styles.title}>Enumeration</Text>
-                <TextInput
-                    dense
-                    mode="outlined"
-                    outlineStyle={{height: 40, borderRadius: 40}}
-                    style={styles.input}
-                    value={searchText}
-                    placeholder="Search"
-                    onChangeText={text => handleSearch(text)}
-                    right={<TextInput.Icon icon="filter" style={{width: 20, height: 20, marginLeft: 100}}/>}
-                />
+                {/*<TextInput*/}
+                {/*    dense*/}
+                {/*    mode="outlined"*/}
+                {/*    outlineStyle={{height: 40, borderRadius: 40}}*/}
+                {/*    style={styles.input}*/}
+                {/*    value={searchText}*/}
+                {/*    placeholder="Search"*/}
+                {/*    onChangeText={text => handleSearch(text)}*/}
+                {/*    right={<TextInput.Icon icon="filter" style={{width: 20, height: 20, marginLeft: 100}}/>}*/}
+                {/*/>*/}
             </View>
         )
     }
@@ -94,16 +94,16 @@ export default function ViewEnumScreen({navigation}) {
         <SafeAreaView style={styles.container}>
             <View style={{flexDirection: 'row'}}>
                 <Text style={styles.title}>Enumeration</Text>
-                <TextInput
-                    dense
-                    mode="outlined"
-                    outlineStyle={{height: 40, borderRadius: 40}}
-                    style={styles.input}
-                    value={searchText}
-                    placeholder="Search"
-                    onChangeText={(text) => handleSearch(text)}
-                    right={<TextInput.Icon icon="filter" style={{width: 20, height: 20, marginLeft: 100}}/>}
-                />
+                {/*<TextInput*/}
+                {/*    dense*/}
+                {/*    mode="outlined"*/}
+                {/*    outlineStyle={{height: 40, borderRadius: 40}}*/}
+                {/*    style={styles.input}*/}
+                {/*    value={searchText}*/}
+                {/*    placeholder="Search"*/}
+                {/*    onChangeText={(text) => handleSearch(text)}*/}
+                {/*    right={<TextInput.Icon icon="filter" style={{width: 20, height: 20, marginLeft: 100}}/>}*/}
+                {/*/>*/}
             </View>
 
 
