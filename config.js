@@ -12,5 +12,5 @@ export const merchant_key = 'AC315743A8'
 
 export const CENTRAL_API = 'https://imocentralapi.centricapps.net/api/v1/'
 // export const CENTRAL_API = 'https://imocentralapi.paytax.ng/api/v1/'
-
-export const version_num = "1.1.0"
+//
+export const version_num = "1.1.1"

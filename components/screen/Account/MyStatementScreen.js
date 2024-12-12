@@ -2,17 +2,37 @@ import React, {useContext, useEffect, useState} from "react";
 import {View, Text, StyleSheet, ScrollView, Dimensions, Alert, ActivityIndicator} from "react-native";
 import {Card} from "react-native-paper";
 import {AuthStore} from "../../../store";
-import {MOBILE_API} from "../../../config";
+import {CENTRAL_API, MOBILE_API} from "../../../config";
 import {AuthContext} from "../../../context/AuthContext";
+import {Button} from "react-native-elements";
 
-export default function MyStatementScreen(){
+export default function MyStatementScreen({navigation}){
     const [loading, setLoading] = useState(false)
     const [statement, setStatement] = useState([])
+    const [fidelity, setFidelity] = useState([])
 
     const info = AuthStore.useState()
     const {userToken} = useContext(AuthContext)
 
-    useEffect(() => {
+    const getFidelityEarnings = () => {
+        setLoading(true)
+        fetch(`${CENTRAL_API}paygate/get-balance`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'accept': 'application/json'
+            },
+            body: JSON.stringify({
+                "email": info.email
+            })
+        }).then((res) => res.json())
+            .then((responseJson) => {
+                setLoading(false)
+                setFidelity(responseJson)
+            })
+    }
+
+    const getStatement = () => {
         setLoading(true)
         fetch(`${MOBILE_API}wallet/my-statement`, {
             headers:{
@@ -23,12 +43,17 @@ export default function MyStatementScreen(){
             .then((resJson) => {
                 setLoading(false)
                 setStatement(resJson.data)
-                console.log(statement)
+                console.log(resJson, "statement")
             })
             .catch((e) => {
                 setLoading(false)
                 Alert.alert('Error Occurred', e.message)
             })
+    }
+
+    useEffect(() => {
+        getStatement()
+        getFidelityEarnings()
     }, []);
     return(
         <ScrollView style={styles.container}>
@@ -89,13 +114,17 @@ export default function MyStatementScreen(){
                                 <Text style={styles.rowLabel}>Total Wallet Credit:</Text>
                                 <Text style={styles.other}>₦{statement.total_wallet_credit}</Text>
                             </View>
-                            {/*<View style={styles.textView}>*/}
-                            {/*    <Text style={styles.rowLabel}>Total Earnings:</Text>*/}
-                            {/*    <Text style={styles.other}>₦{statement.total_earnings}</Text>*/}
-                            {/*</View>*/}
                             <View style={styles.textView}>
                                 <Text style={styles.rowLabel}>Earnings</Text>
                                 <Text style={styles.other}>₦{statement.earning}</Text>
+                            </View>
+                            <View style={styles.textView}>
+                                <Text style={styles.rowLabel}>Fidelity Earnings</Text>
+                                <Text style={styles.other}>₦{fidelity.earnings}</Text>
+                            </View>
+                            <View style={styles.textView}>
+                                <Text style={styles.rowLabel}>Total Earnings:</Text>
+                                <Text style={styles.other}>₦{parseInt(statement.earning) + parseInt(fidelity.earnings)}</Text>
                             </View>
                             <View style={styles.textView}>
                                 <Text style={styles.rowLabel}>Creation Date:</Text>
@@ -105,6 +134,20 @@ export default function MyStatementScreen(){
                         <Card style={styles.card}>
                             <Text style={styles.otherTitle}>Payout Reminder:</Text>
                             <Text style={styles.otherText}>Payout request will be activated  when your Current Earnings are ₦100 and above.</Text>
+                            <View style={{marginTop: 20}}>
+                                <Button
+                                    title="Fidelity Cash Out"
+                                    titleStyle={styles.btnText}
+                                    onPress={() => navigation.navigate('Cash Out',{params: parseInt(fidelity.earnings)})}
+                                    buttonStyle={styles.nextBtnStyle}/>
+                            </View>
+                            <View>
+                                <Button
+                                    title="Access Cash Out"
+                                    titleStyle={styles.btnText}
+                                    onPress={() => navigation.navigate('Cashout',{params: parseInt(statement.earning)})}
+                                    buttonStyle={styles.nextBtnStyle}/>
+                            </View>
                         </Card>
                     </View>
                 )
@@ -138,6 +181,10 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         lineHeight: 22
     },
+    btnText: {
+        color: '#fff',
+        fontFamily: 'DMSans_400Regular',
+    },
     card: {
         width: Dimensions.get('screen').width - 32,
         marginTop: 10,
@@ -162,7 +209,7 @@ const styles = StyleSheet.create({
         color: '#979797',
         fontFamily: 'DMSans_400Regular',
         fontSize: 14,
-        marginLeft: 17,
+        marginLeft: 5,
         marginBottom: 22,
         fontStyle: 'normal',
         fontWeight: '400',
@@ -217,5 +264,18 @@ const styles = StyleSheet.create({
         fontStyle: 'normal',
         fontWeight: '700',
         lineHeight: 18
-    }
+    },
+    nextBtnStyle: {
+        width: 300,
+        height: 48,
+        padding: 10,
+        marginLeft: 16,
+        marginTop: 20,
+        marginBottom: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 8,
+        backgroundColor: '#09893E',
+        flexShrink: 0
+    },
 })

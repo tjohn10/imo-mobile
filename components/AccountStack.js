@@ -15,6 +15,8 @@ import WalletDetailScreen from "./screen/Account/WalletDetailScreen";
 import TransactionDetailScreen from "./screen/Transport-Ticket/TransactionDetailScreen";
 import PendingTransactionsScreen from "./screen/Account/PendingTransactionsScreen";
 import ProcessDebitLaterScreen from "./screen/Account/ProcessDebitLaterScreen";
+import CashoutScreen from "./screen/Account/CashoutScreen";
+import AccessCashoutScreen from "./screen/Account/AccessCashoutScreen";
 
 const Stack = createNativeStackNavigator()
 export default function AccountStack(){
@@ -40,6 +42,8 @@ export default function AccountStack(){
             <Stack.Screen name="Details" component={ProcessDebitLaterScreen} options={{
                 headerTitle: 'Transaction Details'
             }}/>
+            <Stack.Screen name="Cash Out" component={CashoutScreen}/>
+            <Stack.Screen name="Cashout" component={AccessCashoutScreen}/>
             <Stack.Screen name="Transaction Detail" component={TransactionDetailScreen}/>
             <Stack.Screen name="Transfer History" component={TransferHistoryScreen}/>
             <Stack.Screen name="Pending Abssin" component={PendingAbssinScreen}/>

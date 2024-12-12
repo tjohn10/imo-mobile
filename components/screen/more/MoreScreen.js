@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
         shadowColor: 'rgba(15, 13, 35, 0.04)'
     },
     menuCards: {
-        width: 72,
+        width: (Dimensions.get("screen").width - 70)/4,
         height: 78,
         margin: 5,
         marginTop: 10,
