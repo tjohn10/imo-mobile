@@ -14,6 +14,7 @@ export default function TransactionDetailScreen({navigation, route}){
     const qrValue = `https://abia.abssin.com/receipt?PaymentRef=${transactionDetails.payment_ref}`
     const [selectedPrinter, setSelectedPrinter] = useState();
     const userInfo = AuthStore.useState()
+    console.log(transactionDetails, 'trans details')
     const html = `
 <html lang="html">
   <head>
@@ -91,6 +92,10 @@ export default function TransactionDetailScreen({navigation, route}){
          <div style="display: flex; justify-content: space-between; ">
             <h3>Plate Number:</h3>
             <h5>${transactionDetails.trans_ref}</h5>
+        </div> 
+         <div style="display: flex; justify-content: space-between; ">
+            <h3>Enumeration ID:</h3>
+            <h5>${transactionDetails.enumeration_id}</h5>
         </div> 
         <div style="display: flex; justify-content: space-between; ">
             <h3>Payment Reference:</h3>
@@ -192,19 +197,46 @@ export default function TransactionDetailScreen({navigation, route}){
                     <Divider />
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
                         <Text style={styles.rowLabel}>Plate Number:</Text>
-                        <Text style={styles.rowData}>{transactionDetails.trans_ref}</Text>
+                        <Text style={styles.rowData} selectable={true}>{transactionDetails.trans_ref}</Text>
                     </View>
                     <Divider />
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
-                        <Text style={styles.rowLabel}>Shop Number:</Text>
-                        <Text style={styles.rowData}>{transactionDetails.shopNumber}</Text>
-                    </View>
-                    <Divider />
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
-                        <Text style={styles.rowLabel}>Zone/Line:</Text>
-                        {/*<Text style={styles.rowData}>{transactionDetails.zoneLine}</Text>*/}
-                    </View>
-                    <Divider />
+                    {
+                        transactionDetails.trans_type === 'TransportEnumeration' ? (
+                            <View>
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+                                    <Text style={styles.rowLabel}>Enumeration Id:</Text>
+                                    <Text style={styles.rowData} selectable={true}>{transactionDetails.enumeration_id}</Text>
+                                </View>
+                                <Divider />
+                            </View>
+
+                        ) : (
+                            <View>
+                                {
+                                    transactionDetails.trans_type === 'MarketEnumeration' ? (
+                                        <View>
+                                            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+                                                <Text style={styles.rowLabel}>Enumeration Id:</Text>
+                                                <Text style={styles.rowData} selectable={true}>{transactionDetails.enumeration_id}</Text>
+                                            </View>
+                                            <Divider />
+                                            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+                                                <Text style={styles.rowLabel}>Shop Number:</Text>
+                                                <Text style={styles.rowData}>{transactionDetails.shopNumber}</Text>
+                                            </View>
+                                            <Divider />
+                                            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+                                                <Text style={styles.rowLabel}>Zone/Line:</Text>
+                                                <Text style={styles.rowData}>{transactionDetails.zoneLine}</Text>
+                                            </View>
+                                            <Divider />
+                                        </View>
+                                    ) : null
+                                }
+                            </View>
+
+                        )
+                    }
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
                         <Text style={styles.rowLabel}>Payment Reference:</Text>
                         <Text style={styles.rowData}>{transactionDetails.payment_ref}</Text>

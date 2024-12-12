@@ -15,6 +15,9 @@ import LoginScreen from "./screen/Auth/LoginScreen";
 import AuthStack from "./AuthStack";
 import OtherServicesScreen from "./screen/more/OtherServicesScreen";
 import Chat from "./screen/more/ChatScreen";
+import BankTransferScreen from "./screen/more/BankTransferScreen";
+import IntraWalletTransfer from "./screen/more/IntraWalletTransfer";
+import InterWalletTransfer from "./screen/more/InterWalletTransfer";
 
 const Stack = createNativeStackNavigator()
 export default function MoreStack(){
@@ -44,6 +47,15 @@ export default function MoreStack(){
            <Stack.Screen name="Support" component={SupportScreen}/>
            <Stack.Screen name="Other Services" component={OtherServicesScreen}/>
            <Stack.Screen name="Abssin" component={RegisterAbsScreen}/>
+           <Stack.Screen name="Bank" component={BankTransferScreen} options={{
+               headerTitle: 'Transfer To Bank'
+           }}/>
+           <Stack.Screen name="Wallet" component={IntraWalletTransfer} options={{
+               headerTitle: 'To My Wallet'
+           }}/>
+           <Stack.Screen name="External" component={InterWalletTransfer} options={{
+               headerTitle: 'To Other Wallet'
+           }}/>
            <Stack.Screen name="Chat" component={Chat}/>
        </Stack.Navigator>
    )
